@@ -3,8 +3,10 @@ import requests
 import sys
 from urllib.parse import urlparse
 from datetime import datetime
+import clipman
 
 SUPPORTED_DOMAINS = ['kaaoszine.fi']
+clipman.init()
 
 
 def main(url):
@@ -27,6 +29,7 @@ def main(url):
     reference = get_reference(domain, article_details)
 
     print(reference)
+    clipman.set(reference)
 
 
 def get_domain(url):
