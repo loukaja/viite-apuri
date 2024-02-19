@@ -54,6 +54,8 @@ def get_article_details(soup, url):
         one_count = len(rating_div.find_all(class_='one'))
         half_count = len(rating_div.find_all(class_='half'))
         rating = one_count + 0.5 * half_count
+        if rating % 1 == 0:
+            rating = int(rating)
 
     article_details = {
         "title": title,
