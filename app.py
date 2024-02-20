@@ -51,18 +51,25 @@ def get_article_details(soup, url):
     if soup.find('section', class_='block-hero-category-arvostelut'):
         # Rating
         rating_div = soup.find(class_='rating')
-        one_count = len(rating_div.find_all(class_='one'))
-        half_count = len(rating_div.find_all(class_='half'))
-        rating = one_count + 0.5 * half_count
-        if rating % 1 == 0:
-            rating = int(rating)
+        if rating_div:
+            one_count = len(rating_div.find_all(class_='one'))
+            half_count = len(rating_div.find_all(class_='half'))
+            rating = one_count + 0.5 * half_count
+            if rating % 1 == 0:
+                rating = int(rating)
+            max_rating = 5
+        else:
+            rating_class = soup.find(class_='content-section')
+            rating = rating_class.find('h1').get_text().split('/')[0]
+            max_rating = 10
 
     article_details = {
         "title": title,
         "date": date,
         "author": author,
         "url": url,
-        "rating": rating if rating else None
+        "rating": rating if rating else None,
+        "max_rating": max_rating
     }
 
     return article_details
@@ -77,7 +84,7 @@ def get_reference(domain, article_details):
 
     if article_details['rating']:
         site = domain.split('.')[0].title()
-        review = f"* [[{site}]]: {{{{Arvostelutähdet|{article_details['rating']}|5}}}}"
+        review = f"* [[{site}]]: {{{{Arvostelutähdet|{article_details['rating']}|{article_details['max_rating']}}}}}"
 
     reference = (f"<ref>{{{{Verkkoviite | Osoite = {article_details['url']} | Nimeke = {article_details['title']}"
                  f" | Tekijä = {article_details['author']} | Sivusto = {domain} | "
