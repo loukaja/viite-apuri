@@ -46,7 +46,7 @@ def get_article_details(soup, url):
     author_and_date_div = soup.find('div', class_='author-and-date')
     author = author_and_date_div.find('strong').get_text()
     date = author_and_date_div.get_text().split('-')[-1].strip()
-    rating = None
+    rating, max_rating = None, None
 
     if soup.find('section', class_='block-hero-category-arvostelut'):
         # Rating
@@ -69,7 +69,7 @@ def get_article_details(soup, url):
         "author": author,
         "url": url,
         "rating": rating if rating else None,
-        "max_rating": max_rating
+        "max_rating": max_rating if max_rating else None
     }
 
     return article_details
